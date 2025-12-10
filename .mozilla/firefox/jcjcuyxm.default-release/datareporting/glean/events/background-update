@@ -1,0 +1,2 @@
+{"timestamp":27707,"category":"nimbus_events","name":"enroll_failed","extra":{"experiment":"pin-frequently-used-websites-en-promo-rollout-no-min-version","glean_timestamp":"1765336478102","reason":"feature-conflict"}}
+{"timestamp":57286,"category":"nimbus_events","name":"enroll_failed","extra":{"reason":"feature-conflict","glean_timestamp":"1765336507681","experiment":"pin-frequently-used-websites-en-promo-rollout-no-min-version"}}
