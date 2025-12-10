@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stanly Hotel Management</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<!-- Font Awesome Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+/* ===== RESET ===== */
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
+
+/* ===== BODY ===== */
+body {
+    background:#f0f4f8;
+}
+
+/* ===== LOGIN PAGE ===== */
+#loginPage {
+    position:fixed;
+    top:0; left:0; right:0; bottom:0;
+    background: url('https://images.unsplash.com/photo-1612197526725-3cf0f452f4c3?&w=1600') no-repeat center center/cover;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:10;
+}
+#loginPage::before {
+    content:"";
+    position:absolute;
+    top:0; left:0; right:0; bottom:0;
+    background: rgba(0,0,50,0.6);
+}
+#loginBox {
+    position:relative;
+    z-index:11;
+    width:400px;
+    background: rgba(255,255,255,0.95);
+    padding:40px 30px;
+    border-radius:15px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    text-align:center;
+    animation: fadeIn 1s ease;
+}
+#loginBox h2 { color:#00264d; margin-bottom:25px; font-size:28px; letter-spacing:1px; }
+#loginBox input {
+    width:100%; margin:15px 0; padding:14px; border:1px solid #ccc; border-radius:8px; font-size:16px; transition:0.3s;
+}
+#loginBox input:focus { border-color:#ffcc00; outline:none; }
+#loginBox button {
+    width:100%; padding:16px; margin-top:10px; background:#00264d; color:white; border:none; border-radius:8px; font-size:18px; font-weight:600; cursor:pointer; transition:0.3s;
+}
+#loginBox button:hover { background:#004080; transform: translateY(-2px); box-shadow:0 8px 20px rgba(0,0,0,0.3); }
+#loginBox p { margin-top:12px; color:red; font-weight:600; font-size:14px; }
+
+@keyframes fadeIn { from {opacity:0; transform: translateY(-20px);} to {opacity:1; transform: translateY(0);} }
+
+/* ===== NAVBAR ===== */
+nav { background:#00264d; padding:15px 30px; display:flex; gap:20px; flex-wrap:wrap; align-items:center; display:none; }
+nav a { color:white; text-decoration:none; font-size:16px; font-weight:600; cursor:pointer; transition:0.3s; }
+nav a:hover { color:#ffcc00; }
+
+/* ===== SECTIONS ===== */
+section { display:none; padding:30px 40px; }
+section.active { display:block; }
+
+/* ===== DASHBOARD ===== */
+.dashboard { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:25px; margin-top:20px; }
+.card { background:white; padding:25px; text-align:center; border-radius:15px; box-shadow:0 8px 25px rgba(0,0,0,0.15); transition:0.3s; position:relative; overflow:hidden; }
+.card i { font-size:32px; color:#00264d; margin-bottom:10px; }
+.card h2 { margin-bottom:10px; color:#00264d; }
+.card p { font-size:28px; font-weight:600; color:#004080; }
+.card:hover { transform:translateY(-5px); box-shadow:0 12px 30px rgba(0,0,0,0.2); }
+
+/* ===== ROOMS ===== */
+.rooms-container { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:25px; margin-top:20px; }
+.room { background:white; border-radius:15px; overflow:hidden; box-shadow:0 8px 25px rgba(0,0,0,0.15); cursor:pointer; transition:0.3s; }
+.room img { width:100%; height:160px; object-fit:cover; }
+.room-info { padding:15px; text-align:center; }
+.room-info h3 { color:#00264d; margin-bottom:10px; }
+.room-info p { font-weight:600; color:#004080; }
+.room:hover { transform:translateY(-5px); box-shadow:0 12px 30px rgba(0,0,0,0.2); }
+
+/* ===== BOOKING FORM ===== */
+.booking-form { max-width:500px; background:white; padding:30px; border-radius:15px; box-shadow:0 8px 25px rgba(0,0,0,0.15); margin-top:20px; }
+.booking-form label { display:block; margin:12px 0 5px; font-weight:600; }
+.booking-form input, .booking-form select, .booking-form textarea { width:100%; padding:12px; border:1px solid #ccc; border-radius:8px; margin-bottom:12px; font-size:16px; transition:0.3s; }
+.booking-form input:focus, .booking-form select:focus, .booking-form textarea:focus { border-color:#00264d; outline:none; }
+.booking-form button { width:100%; padding:14px; background:#00264d; color:white; border:none; border-radius:8px; font-size:16px; cursor:pointer; transition:0.3s; }
+.booking-form button:hover { background:#004080; }
+.booking-form p { margin-top:10px; font-weight:600; }
+
+/* ===== BOOKING STATUS ===== */
+.status-card { max-width:550px; background:white; padding:25px; border-radius:15px; box-shadow:0 8px 25px rgba(0,0,0,0.15); margin-top:20px; }
+.status-card h3 { color:#00264d; margin-bottom:10px; }
+.status-card p { margin:5px 0; color:#004080; }
+
+/* ===== MESSAGES ===== */
+.success { color:green; font-weight:600; }
+.danger { color:red; font-weight:600; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width:900px) { .dashboard, .rooms-container { grid-template-columns:1fr 1fr; } }
+@media (max-width:600px) { nav { flex-direction:column; text-align:center; } .booking-form, .status-card { width:90%; } .dashboard, .rooms-container { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+<!-- LOGIN PAGE -->
+<div id="loginPage">
+<div id="loginBox">
+<h2>Stanly Hotel Login</h2>
+<input type="text" id="username" placeholder="Username">
+<input type="password" id="password" placeholder="Password">
+<button onclick="login()">Login</button>
+<p id="loginError"></p>
+</div>
+</div>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+<a onclick="showSection('dashboard')"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+<a onclick="showSection('rooms')"><i class="fa-solid fa-bed"></i> Rooms</a>
+<a onclick="showSection('book')"><i class="fa-solid fa-calendar-check"></i> Book Room</a>
+<a onclick="showSection('status')"><i class="fa-solid fa-list"></i> Booking Status</a>
+<a onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+</nav>
+
+<!-- DASHBOARD -->
+<section id="dashboard">
+<h1>🏨 Welcome to Stanly Hotel</h1>
+<div class="dashboard">
+<div class="card"><i class="fa-solid fa-bed"></i><h2>Available Rooms</h2><p id="availableRooms">0</p></div>
+<div class="card"><i class="fa-solid fa-person"></i><h2>Occupied Rooms</h2><p id="occupiedRooms">0</p></div>
+<div class="card"><i class="fa-solid fa-hotel"></i><h2>Total Rooms</h2><p id="totalRooms">0</p></div>
+<div class="card"><i class="fa-solid fa-dollar-sign"></i><h2>Total Revenue</h2><p id="revenue">$0</p></div>
+</div>
+</section>
+
+<!-- ROOMS -->
+<section id="rooms">
+<h2>Hotel Rooms</h2>
+<div class="rooms-container" id="roomsContainer"></div>
+</section>
+
+<!-- BOOK ROOM -->
+<section id="book">
+<h2>Book a Room</h2>
+<form class="booking-form" onsubmit="return bookRoom(event)">
+<label>Full Name</label>
+<input type="text" id="guestName" required>
+<label>Room Type</label>
+<select id="roomType" required>
+<option>Deluxe</option>
+<option>Standard</option>
+<option>Suite</option>
+<option>Luxury</option>
+</select>
+<label>Number of Persons</label>
+<input type="number" id="persons" required>
+<label>Number of Days</label>
+<input type="number" id="days" required>
+<label>Special Requirements</label>
+<textarea id="requirements" placeholder="Food, Extra Bed, etc."></textarea>
+<button type="submit">Confirm Booking</button>
+<p id="bookMsg"></p>
+</form>
+</section>
+
+<!-- BOOKING STATUS -->
+<section id="status">
+<h2>Booking Status</h2>
+<div id="statusContainer"></div>
+</section>
+
+<script>
+// ===== DATA =====
+let rooms = [
+{ id:1,type:"Deluxe",price:120,status:"Available",guest:null,img:"https://images.unsplash.com/photo-1600585154340-be6161a56a0c?&w=400" },
+{ id:2,type:"Suite",price:200,status:"Available",guest:null,img:"https://images.unsplash.com/photo-1560347876-aeef00ee58a1?&w=400" },
+{ id:3,type:"Standard",price:80,status:"Available",guest:null,img:"https://images.unsplash.com/photo-1611892440504-42a792e24d32?&w=400" },
+{ id:4,type:"Luxury",price:260,status:"Available",guest:null,img:"https://images.unsplash.com/photo-1501117716987-c8e0f21e1d9f?&w=400" }
+];
+
+// ===== LOGIN =====
+function login() {
+let user = document.getElementById("username").value;
+let pass = document.getElementById("password").value;
+if(user==="admin" && pass==="1234") {
+document.getElementById("loginPage").style.display="none";
+document.getElementById("navbar").style.display="flex";
+showSection('dashboard');
+updateDashboard();
+renderRooms();
+renderStatus();
+} else {
+document.getElementById("loginError").innerText="Invalid login!";
+}
+}
+
+function logout() {
+document.getElementById("loginPage").style.display="flex";
+document.getElementById("navbar").style.display="none";
+document.getElementById("username").value="";
+document.getElementById("password").value="";
+}
+
+// ===== NAVIGATION =====
+function showSection(id){
+document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+}
+
+// ===== DASHBOARD =====
+function updateDashboard(){
+let total = rooms.length;
+let occupied = rooms.filter(r=>r.status==="Occupied").length;
+let available = total-occupied;
+let revenue = rooms.filter(r=>r.status==="Occupied").reduce((sum,r)=>sum+r.price,0);
+document.getElementById("totalRooms").innerText=total;
+document.getElementById("occupiedRooms").innerText=occupied;
+document.getElementById("availableRooms").innerText=available;
+document.getElementById("revenue").innerText="$"+revenue;
+}
+
+// ===== ROOMS =====
+function renderRooms(){
+let container=document.getElementById("roomsContainer");
+container.innerHTML="";
+rooms.forEach(r=>{
+let div=document.createElement("div");
+div.className="room";
+div.innerHTML=`<img src="${r.img}" alt="${r.type}"><div class="room-info"><h3>${r.type}</h3><p>$${r.price} - ${r.status}</p></div>`;
+container.appendChild(div);
+});
+}
+
+// ===== BOOK ROOM =====
+function bookRoom(event){
+event.preventDefault();
+let name=document.getElementById("guestName").value;
+let type=document.getElementById("roomType").value;
+let persons=document.getElementById("persons").value;
+let days=document.getElementById("days").value;
+let req=document.getElementById("requirements").value;
+let room=rooms.find(r=>r.type===type && r.status==="Available");
+let msg=document.getElementById("bookMsg");
+if(room){
+room.status="Occupied";
+room.guest={name,persons,days,requirements:req};
+msg.innerText="Room booked successfully!";
+msg.className="success";
+document.getElementById("guestName").value="";
+document.getElementById("persons").value="";
+document.getElementById("days").value="";
+document.getElementById("requirements").value="";
+updateDashboard();
+renderRooms();
+renderStatus();
+} else{
+msg.innerText="No available rooms of this type!";
+msg.className="danger";
+}
+return false;
+}
+
+// ===== BOOKING STATUS =====
+function renderStatus(){
+let container=document.getElementById("statusContainer");
+container.innerHTML="";
+rooms.filter(r=>r.status==="Occupied").forEach(r=>{
+let div=document.createElement("div");
+div.className="status-card";
+div.innerHTML=`<h3>Room: ${r.type}</h3>
+<p>Guest: ${r.guest.name}</p>
+<p>Persons: ${r.guest.persons}</p>
+<p>Days: ${r.guest.days}</p>
+<p>Requirements: ${r.guest.requirements}</p>`;
+container.appendChild(div);
+});
+}
+</script>
+</body>
+</html>
+
